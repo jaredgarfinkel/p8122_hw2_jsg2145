@@ -1,0 +1,79 @@
+---
+title: "20201012-p8122_hw2_jsg2145"
+author: "Jared Garfinkel"
+date: "10/12/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(viridis)
+knitr::opts_chunk$set(
+	echo = TRUE,
+	warning = FALSE,
+	message = FALSE,
+	fig.width = 8, 
+  fig.height = 6,
+  out.width = "90%"
+)
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+```
+
+## Read in data
+
+```{r, results = "hide"}
+data = read_csv("./data/light.csv") %>% 
+  janitor::clean_names()
+
+data
+```
+
+# Problem 1
+
+```{r}
+data %>% 
+  ggplot(aes(x = light, y = bm_gain, fill = light)) +
+  geom_boxplot(alpha = 0.7)
+```
+
+# Problem 2
+
+Assuming DM = darkness, LD = dim, and LL = bright
+
+### subset the data
+
+```{r}
+df = data %>% 
+  filter(light %in% c("DM", "LL"))
+```
+
+# Problem 3
+
+Recode the variables and rename them for ease of use.
+
+```{r}
+df = df %>% 
+  mutate(light = recode(light, 
+                        "DM" = "0",
+                        "LL" = "1")) %>% 
+  rename("tr" = light,
+         "y" = bm_gain)
+```
+
+We will need the estimand and the sampling variance to evaluate the causal effects of light at night on weight gain in mice for Neyman's approach, or the observed outcomes, the treatment group assignments, and the covariates, for Fisher's approach.
+
+# Problem 4
+
+$T_{obs} = \frac{\sum_{i=1}^{n}{A_iY_{1i}}}{N_1} - \frac{\sum_{i=1}^{n}(1-A_i)Y_{0i}}{N_0}$
+
+```{r}
+df %>% 
+  summarize(t_obs = sum(y*(tr==1)-y*(tr==0)))
+```
+

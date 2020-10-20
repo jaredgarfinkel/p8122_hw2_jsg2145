@@ -134,5 +134,3 @@ abline(v = pull(t_obs, t_obs))
 p <- mean(rdist >= pull(t_obs, t_obs))
 p
 ```
-
-

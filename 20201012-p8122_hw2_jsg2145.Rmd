@@ -107,6 +107,8 @@ The t-statistic under the sharp null hypothesis is `r pull(t_stat, t_stat)`
 
 # Problem 7
 
+Make the dataframe.
+
 ```{r, cache = TRUE}
 rdist = vector(mode = "list", length = nrow(amat))
 atilde = NULL
@@ -122,15 +124,22 @@ for (i in 1:nrow(amat)) {
 rdist = bind_rows(rdist)
 ```
 
+# Problem 8
 
 ```{r}
 rdist %>% 
   pull(rdist) %>% 
   hist()
-abline(v = pull(t_obs, t_obs))
+abline(v = pull(t_obs, t_obs), col="red")
 ```
+
+# Problem 9
 
 ```{r}
 p <- mean(rdist >= pull(t_obs, t_obs))
 p
 ```
+
+# Problem 10
+
+The p-value is less than 0.05, so we conclude there is evidence to suggest that bright lights cause an increase the amount of weight gain in subjects over the study period in one or more subjects.
